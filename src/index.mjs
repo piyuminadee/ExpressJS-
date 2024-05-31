@@ -9,9 +9,30 @@ const makUser = [
     {id : 3,name : "rajith", displayNAme : "rajith"},
 ];
 
-app.get("/api/users", (request, response) => {
-    response.send(makUser);
+// app.get("/api/users", (request, response) => {
+//     response.send(makUser);
+// });
+
+
+        //    !QUERY PARAMS
+        // ? http://localhost:3000/api/users?search=name&&value=i
+app.get("/api/users", (request,response)=>{
+    console.log(request.query);
+    const {
+        query : {search, value},
+
+    } = request;
+
+
+        //when search and value are undefined
+    if(!search && !value) return response.send(makUser);
+
+        //when search and value exists
+    if(search && value) return response.send(
+        makUser.filter((user)=> user[search].includes(value))
+    );
 });
+
 
 
 app.get("/api/users/:id", (request, response) =>{
