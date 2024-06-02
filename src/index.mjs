@@ -1,6 +1,7 @@
 import express, { request, response } from "express";
 
 const app = express();
+app.use(express.json())
 
 const PORT = process.env.PORT || 3000;
 const makUser = [
@@ -31,7 +32,14 @@ app.get("/api/users", (request,response)=>{
     if(search && value) return response.send(
         makUser.filter((user)=> user[search].includes(value))
     );
+
+
 });
+
+app.post("/api/users", (request, response)=>{
+    console.log(request.body);
+    return response.send(200);
+})
 
 
 
