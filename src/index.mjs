@@ -45,7 +45,19 @@ app.post("/api/users", (request, response)=>{
    makUser.push(newUser);
    return response.status(201).send(newUser);
 })
-
+  // !PUT REQUEST
+  app.put("/api/users/:id", (request,response)=>{
+    const {
+        body,
+        params : {id},
+    } = request;
+    const parsedId = parseInt(id);
+    if(isNaN(parsedId)) return response.sendStatus(400);
+    const findUserIndex = makUser.findIndex((user)=>user.id===parsedId);
+    if(findUserIndex===-1) return response.sendStatus(404);
+    makUser[findUserIndex] = {id: parsedId, ...body};
+    return response.sendStatus(200);
+  })
 
 
 
