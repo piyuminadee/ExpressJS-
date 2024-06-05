@@ -36,10 +36,16 @@ app.get("/api/users", (request,response)=>{
 
 });
 
+        //    !POST REQUEST
+
 app.post("/api/users", (request, response)=>{
-    console.log(request.body);
-    return response.send(200);
+    const {body} = request;
+   const newUser = {id:makUser[makUser.length-1].id + 1, ...body};
+
+   makUser.push(newUser);
+   return response.status(201).send(newUser);
 })
+
 
 
 
