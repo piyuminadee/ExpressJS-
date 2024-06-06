@@ -3,6 +3,14 @@ import express, { request, response } from "express";
 const app = express();
 app.use(express.json())
 
+ // ?    MIDDLEWARE
+const loggingMiddleware = (request, response, next) =>{
+    console.log(`${request.method}-${request.url}`);
+    next();
+}
+
+app.use(loggingMiddleware);
+
 const PORT = process.env.PORT || 3000;
 const makUser = [
     {id : 1, name : "muthu", displayNAme : "Muthu"},
@@ -13,6 +21,7 @@ const makUser = [
 // app.get("/api/users", (request, response) => {
 //     response.send(makUser);
 // });
+
 
 
         //    !QUERY PARAMS
@@ -38,12 +47,13 @@ app.get("/api/users", (request,response)=>{
 
         //    !POST REQUEST
 
-app.post("/api/users", (request, response)=>{
+app.post("/api/users", (request, response,next)=>{
     const {body} = request;
    const newUser = {id:makUser[makUser.length-1].id + 1, ...body};
 
    makUser.push(newUser);
    return response.status(201).send(newUser);
+   next();
 })
   // !PUT REQUEST
   app.put("/api/users/:id", (request,response)=>{
