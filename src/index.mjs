@@ -74,7 +74,20 @@ app.post("/api/users", (request, response)=>{
     return response.sendStatus(200);
   })
 
+   // !DELETE REQUEST
+   app.delete("/api/users/:id", (request,response)=>{
+    const {
+        params : {id},
+    } = request;
+    const parsedId = parseInt(id);
+    if(isNaN(parsedId)) return response.sendStatus(400);
+    const findUserIndex = makUser.findIndex((user)=>user.id===parsedId);
+    if(findUserIndex===-1) return response.sendStatus(404);
+    makUser.splice(findUserIndex);
+    return response.sendStatus(200);
+   })
 
+ // !GET REQUEST
 
 app.get("/api/users/:id", (request, response) =>{
     console.log(request.params);
