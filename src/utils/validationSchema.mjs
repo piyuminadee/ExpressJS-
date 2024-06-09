@@ -16,3 +16,4 @@ export const createUserVAlidationSchema = {
     },
     },
 };
+export default createUserVAlidationSchema;
