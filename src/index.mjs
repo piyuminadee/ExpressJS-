@@ -1,14 +1,11 @@
 import express, { request, response } from "express";
-//import { query} from "express";
-
-import {body, query, validationResult, matchedData , checkSchema} from "express-validator";
-import { createUserVAlidationSchema } from "./utils/validationSchema.mjs";
 import userRouter from "./routes/users.mjs";
-import { makUser } from "./utils/constans.mjs";
+import productRoutes from "./routes/products.mjs";
 
 const app = express();
 app.use(express.json());
 app.use(userRouter);
+app.use(productRoutes);
 
 // ?    MIDDLEWARE
 const loggingMiddleware = (request, response, next) => {
@@ -133,7 +130,10 @@ app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
 });
 
-
+app.get("/", (request, response) => {
+  response.cookie("Active", "World", {maxAge:6000})
+  response.status(201).send({msg : "hello"})
+})
 
 
 
