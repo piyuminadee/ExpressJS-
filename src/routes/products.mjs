@@ -1,10 +1,12 @@
 //import { Router, response } from "express";
 import {  validationResult } from "express-validator";
+//import session from "express-session";
 //import router from "./users.mjs";
 import { Router } from "express";
 //import { makUser } from "../utils/constans.mjs";
 import cookieParser from "cookie-parser";
 const router = Router();
+
 router.use(cookieParser());
 router.get(
     "/api/products",

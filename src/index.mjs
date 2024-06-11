@@ -1,11 +1,19 @@
 import express, { request, response } from "express";
 import userRouter from "./routes/users.mjs";
 import productRoutes from "./routes/products.mjs";
+import session from "express-session";
+
 
 const app = express();
 app.use(express.json());
 app.use(userRouter);
 app.use(productRoutes);
+app.use(session({
+  secret: 'keybord cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie : {secure: true}
+}))
 
 // ?    MIDDLEWARE
 const loggingMiddleware = (request, response, next) => {
@@ -132,6 +140,8 @@ app.listen(PORT, () => {
 
 app.get("/", (request, response) => {
   response.cookie("Active", "World", {maxAge:6000})
+  console.log(request.session);
+  console.log(request.sessionID);
   response.status(201).send({msg : "hello"})
 })
 
