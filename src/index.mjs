@@ -2,11 +2,13 @@ import express, { request, response } from "express";
 import userRouter from "./routes/users.mjs";
 import productRoutes from "./routes/products.mjs";
 import session from "express-session";
+import { makUser } from "./utils/constans.mjs";
+import passport from "passport";
 
 
 const app = express();
 app.use(express.json());
-app.use(userRouter);
+
 app.use(productRoutes);
 app.use(session({
   secret: 'keybord cat',
@@ -15,6 +17,9 @@ app.use(session({
   cookie : {secure: true}
 }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(userRouter);
 // ?    MIDDLEWARE
 const loggingMiddleware = (request, response, next) => {
   console.log(`${request.method}-${request.url}`);
@@ -145,5 +150,21 @@ app.get("/", (request, response) => {
   response.status(201).send({msg : "hello"})
 })
 
+app.post("/api/auth", (request, response) => {
+  const {
+    body: {name, password},
 
+  } = request;
+  const findUser = makUser.find((user) => user.name === name);
+  if(!findUser || findUser.password !== password)
+    return response.status(401).send({msg : "BAD CREDENTIALS"});
 
+  request.session.user = findUser;
+  return response.status(200).send(findUser);
+});
+
+app.get("/api/auth/status", (request, response) =>{
+  return request.session.user
+  ? response.status(200).send(request.session.user)
+  : response.status(401).send({msg : "Not Authentication"});
+});
