@@ -4,6 +4,8 @@ import productRoutes from "./routes/products.mjs";
 import session from "express-session";
 import { makUser } from "./utils/constans.mjs";
 import passport from "passport";
+import { Strategy } from "passport-local";
+import './stratergies/local-strategy.mjs'
 
 
 const app = express();
@@ -14,12 +16,19 @@ app.use(session({
   secret: 'keybord cat',
   resave: false,
   saveUninitialized: true,
-  cookie : {secure: true}
+  cookie : {secure: false}
 }))
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
 app.use(userRouter);
+
+app.post("/api/auth", passport.authenticate("local"), (request, response) => {
+  response.send({ msg: "Authenticated" });
+});
 // ?    MIDDLEWARE
 const loggingMiddleware = (request, response, next) => {
   console.log(`${request.method}-${request.url}`);
@@ -151,6 +160,7 @@ app.get("/", (request, response) => {
 })
 
 app.post("/api/auth", (request, response) => {
+ 
   const {
     body: {name, password},
 
@@ -159,11 +169,12 @@ app.post("/api/auth", (request, response) => {
   if(!findUser || findUser.password !== password)
     return response.status(401).send({msg : "BAD CREDENTIALS"});
 
-  request.session.user = findUser;
+  request.session.user = findUser;    //server know who user it is
   return response.status(200).send(findUser);
 });
 
 app.get("/api/auth/status", (request, response) =>{
+  console.log(request.session.id);
   return request.session.user
   ? response.status(200).send(request.session.user)
   : response.status(401).send({msg : "Not Authentication"});
