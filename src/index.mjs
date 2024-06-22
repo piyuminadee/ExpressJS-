@@ -174,8 +174,10 @@ app.post("/api/auth", (request, response) => {
 });
 
 app.get("/api/auth/status", (request, response) =>{
-  console.log(request.session.id);
-  return request.session.user
-  ? response.status(200).send(request.session.user)
+  console.log(`Inside /auth/status endpoint`);
+  console.log(request.user);
+
+  return request.user
+  ? response.status(200).send(request.user)
   : response.status(401).send({msg : "Not Authentication"});
 });
