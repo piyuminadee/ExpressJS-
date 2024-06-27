@@ -5,11 +5,18 @@ import session from "express-session";
 import { makUser } from "./utils/constans.mjs";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import mongoose from "mongoose";
 import './stratergies/local-strategy.mjs'
 
 
 const app = express();
 app.use(express.json());
+
+mongoose
+.connect('mongodb+srv://express:1234@cluster0.5gahjnj.mongodb.net/express-tutorial?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log("Connect database"))
+.catch((err)=> console.log(`Error: ${err}`));
+
 
 app.use(productRoutes);
 app.use(session({

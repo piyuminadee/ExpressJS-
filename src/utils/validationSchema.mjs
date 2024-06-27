@@ -13,7 +13,8 @@ export const createUserVAlidationSchema = {
             min:3
         },
         errorMessage :"must have atleast 3 characters"
-    },
+    }
+   
     },
 };
 export default createUserVAlidationSchema;

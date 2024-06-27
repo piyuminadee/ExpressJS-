@@ -3,6 +3,7 @@ import { query, validationResult, matchedData, checkSchema } from "express-valid
 import { makUser } from "../utils/constans.mjs";
 import createUserVAlidationSchema from "../utils/validationSchema.mjs";
 //import loggingMiddleware from "../index.mjs";
+import  {User} from "../mongoose/schemas/user.mjs";
 
 
 const router = Router();
@@ -38,18 +39,19 @@ router.get(
 router.post(
   "/api/users", 
   checkSchema(createUserVAlidationSchema),
-    (request, response, next) => {
-        const result = validationResult(request);
-        console.log(result);
-        const data = matchedData(request);
-        console.log(data)
-        if(!result.isEmpty()) return response.status(400).send({errors: result.array()})
-  //const { body } = request;
-  const newUser = { id: makUser[makUser.length - 1].id + 1, ...data };
-
-  makUser.push(newUser);
-  return response.status(201).send(newUser);
+   async (request, response) => {
+    const result = validationResult(request);
+    if(!result.isEmpty()) return response.send(result.array());
   
+     const {body} = request;
+     const newUser = new User(body);
+    try{
+      const savedUser = await newUser.save();
+      return response.status(201).send(savedUser)
+    } catch (err) {
+      console.log(err);
+      return response.sendStatus(400);
+    }
 }
 )   
 
